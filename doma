@@ -1,0 +1,74 @@
+#!/bin/sh
+#
+# dotfile manager 1.0
+
+# === Calculate scriptpath
+
+SCRIPT=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+# === Functions
+
+# collects the config and saves it near doma
+collect_config() {
+	echo "collect i3 conf"
+	[ ! -d $SCRIPTPATH/i3 ] && mkdir $SCRIPTPATH/i3
+	cp -r ~/.i3/* $SCRIPTPATH/i3/  
+	echo "collect zshrc"
+	cp -r ~/.zshrc $SCRIPTPATH/zshrc
+	echo "collect termite conf"
+	cp -r ~/.config/termite/config $SCRIPTPATH/termite.conf  
+	echo "collect nvim conf"
+	cp -r ~/.config/nvim/init.vim $SCRIPTPATH/init.vim  
+	echo "collect comption conf"
+	cp -r ~/.config/compton.conf $SCRIPTPATH/compton.conf
+	echo "collect alias file"
+	cp -r ~/.aliases $SCRIPTPATH/aliases
+	echo "collect i3status conf"
+	cp -r ~/.config/i3status/config $SCRIPTPATH/i3status.conf
+	echo "Finished collecting the whole config!"
+}
+
+upload_config() {
+	git add .
+	git commit -m "dotfiles updated"
+	git push
+}
+
+# applies confg files to its destinations
+apply_config() {
+	echo "apply i3 conf"
+	cp -r $SCRIPTPATH/i3/* ~/.i3/
+	echo "apply zshrc "
+	cp -r $SCRIPTPATH/zshrc ~/.zshrc
+	echo "apply termite conf"
+	cp -r $SCRIPTPATH/termite.conf ~/.config/termite/config
+	echo "apply nvim conf"
+	cp -r $SCRIPTPATH/init.vim ~/.config/nvim/init.vim
+	echo "apply comption conf"
+	cp -r $SCRIPTPATH/compton.conf ~/.config/compton.conf
+	echo "applying alias file"
+	cp -r $SCRIPTPATH/aliases ~/.aliases
+	echo "applying i3status conf"
+	cp -r $SCRIPTPATH/i3status.conf ~/.config/i3status/config
+	echo "Finished applying the whole config!"
+}
+
+echo "Choose Option:"
+echo "  (s)ave: Will collect all configured dotfiles from filesystem."
+echo "  (a)pply: Will apply all config files in from this collection to the right places."
+
+read option
+echo ""
+
+if [ "$option" = "s" ]; then
+	echo "Start collecting configs"
+	collect_config
+	upload_config
+elif [ "$option" = "a" ]; then
+	echo "Start applying configs"
+	apply_config
+else
+	echo "Scheesh try again ;-)"
+fi
+
