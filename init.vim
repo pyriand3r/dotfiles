@@ -4,18 +4,18 @@ scriptencoding utf-8
 " ===                                  BASICS                                  ===
 " ================================================================================
 
-" Set line numbering and relative line numbering
-" nu = absolute line numbering
-" rnu = relative line numbering
-set nu rnu
-
-" defaults are awful messy, leaving .swp files everywhere if the editor
-" isn’t closed properly. This can save you a lot of time.
-set nobackup  "disable backup files
-set noswapfile "disable swap files (swp)
-
-" set nvim to always move into directory of opened file
-set autochdir
+set number									" set absolut numbers 
+set relativenumber					" set relative line number 
+set cursorline							" Highlight current line
+set nobackup  							"disable backup files
+set noswapfile							"disable swap files (swp)
+set autochdir 							"always move into directory of opened file
+set noexpandtab							"on pressing tab insert tab, no spaces
+set copyindent							"
+set preserveindent					"keep indentation of file (spaces if spaces, tabs if tabs)
+set softtabstop=0
+set tabstop=2								"show tabs with two spaces length
+set shiftwidth=2						"when indenting with '>' use one tab
 
 " activate autocompletion for tags in html files
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
@@ -24,36 +24,52 @@ autocmd FileType markdown set omnifunc=htmlcomplete#CompleteTags
 " Recognize .md files as markdown
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 
-" On pressing tab insert tab
-set noexpandtab
-
-set copyindent
-
-set preserveindent
-" show existing tabs with 2 spaces
-set softtabstop=0
-set tabstop=2
-" when indenting with '>' use 1 tab
-set shiftwidth=2
 
 " set indentation to 2 spaces
 filetype plugin indent off
-" On pressing tab, insert 2 spaces
-"set expandtab
-" show existing tab with 2 spaces width
-"set tabstop=2
-"set softtabstop=2
-" when indenting with '>', use 2 spaces width
-"se shiftwidth=2
 
-" === autoclose brackets ===
-inoremap " ""<left>
-inoremap ' ''<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<ESC>O
-inoremap {;<CR> {<CR>};<ESC>O
+set clipboard=unnamed,unnamedplus
+set listchars=tab:▸\ ,trail:·,nbsp:~,precedes:❮,extends:❯
+set list                    " Display listchars
+set nowrap                  " Don’t wrap long lines
+set breakindent             " Indent continued lines after break
+set showbreak=↪             " Show symbol for contiuned lines after break
+set linebreak               " Don’t wrap long lines in the middle of a word
+set scrolloff=3             " Display at least 3 lines above/below cursor
+set sidescrolloff=3         " Display at least 3 columns right/left of cursor
+set sidescroll=1            " Don’t put cursor in the mid. of the screen on hor. scroll
+set mouse=a                 " Enable the use of mouse in all modes
+set autoread                " Reload file if changed outside of vim
+set hidden                  " Don’t unload abandoned buffers
+set nostartofline           " Keep the cursor in the same column when moving
+set nobackup                " Don’t create backups on save
+set noswapfile              " Don’t create swap files
+set nomodeline              " Don’t read modelines from files
+set splitbelow              " Open hsplit below current window
+set splitright              " Open vsplit right of current window
+set ruler                   " Show line and column number
+set showcmd                 " Show command in the bottom right of the screen
+set laststatus=2            " Always show statusbar
+set noshowmode              " Disable mode message, Lightline also has it
+set encoding=utf-8          " Default character encoding
+set textwidth=79            " Maximum width of text that is being inserted
+set colorcolumn=+1,80,101   " Highlight these columns (+1 == textwidth)
+set autoindent              " Automatically indent new lines
+set incsearch               " Show matches while entering the search pattern
+set ignorecase              " Ignore case while searching …
+set smartcase               " … except when pattern contains an upper case character
+set hlsearch                " Keep matches of previous search highlighted
+
+" Return to the same line when you reopen a file.
+augroup line_return
+	autocmd!
+	autocmd BufReadPost *
+		\ if line("'\"") > 0 && line("'\"") <= line("$") |
+		\     execute 'normal! g`"zvzz' |
+		\ endif
+augroup END
+
+
 
 " ================================================================================
 " ===                                  PLUGINS                                 ===
@@ -87,24 +103,21 @@ let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint', 'coc-vetur', 'coc-c
 
 call plug#begin('~/.config/nvim/plugged')
 " === GENERAL ===
-" snippets/autocompletion
-Plug 'SirVer/ultisnips'  
-Plug 'honza/vim-snippets'
-"distraction free mode  
-Plug 'junegunn/goyo.vim'
-"dimm lines execpt active one
-Plug 'junegunn/limelight.vim'
 " autosave
-Plug '907th/vim-auto-save'
-" fuzzy finding, open buffer list, floating menues
-Plug 'Shougo/denite.nvim'
-"sidebar file/folder tree
-Plug 'scrooloose/nerdtree'
-"NERDtree git flags
-Plug 'Xuyuanp/nerdtree-git-plugin'
-"Git support
-Plug 'tpope/vim-fugitive'
-
+Plug '907th/vim-auto-save'					"autosave
+Plug 'tpope/vim-fugitive'						"git support
+Plug 'junegunn/fzf.vim'							"easy file opening, fuzzy finding
+Plug 'itchyny/lightline.vim'				"status bar
+Plug 'jremmen/vim-ripgrep'					"ripgrep
+Plug 'tpope/vim-eunuch'							"additional userfull commands
+"Plug 'tpope/vim-vinegar'						"simple file browser
+Plug 'scrooloose/nerdtree' 					"sidebar file browser with neat features
+Plug 'Xuyuanp/nerdtree-git-plugin' 	"git icons on nerdtree
+Plug 'terryma/vim-multiple-cursors' "use multiple cursors
+Plug 'tomtom/tcomment_vim'					"toggle comment with g<c line and g<b block
+Plug 'tweekmonster/braceless.vim'		"show indent guides
+Plug 'airblade/vim-gitgutter' 			"show changed lines in column
+Plug 'tpope/vim-surround' 					"change add brakets
 " === LANGUAGE SUPPORT ===
 " intellisense language server
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -118,7 +131,7 @@ Plug 'leafgarland/typescript-vim'
 "Plug 'plasticboy/vim-markdown'
 Plug 'gabrielelana/vim-markdown'
 "markdown preview
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 
 " === THEMES ===
 " monokai pro theme
@@ -126,93 +139,13 @@ Plug 'phanviet/vim-monokai-pro'
 
 call plug#end()
 
-" ================================================================================
-" ===                               PLUGINS_CONFIG                             ===
-" ================================================================================
-" === ultisnips ===
-" Trigger configuration for ultisnips. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-tab>"  " use <Tab> trigger autocompletion
-let g:UltiSnipsJumpForwardTrigger="<c-f>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+" =============================================================================
+" ===                             PLUGINS_CONFIG                            ===
+" =============================================================================
 
-" === Limelight ===
-" Toggle Limelight together with distraction free mode
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
-
-" Wrap in try/catch to avoid errors on initial install before plugin is available
-try
-" === Denite setup ==="
-" Use ripgrep for searching current directory for files
-" By default, ripgrep will respect rules in .gitignore
-"   --files: Print each file that would be searched (but don't search)
-"   --glob:  Include or exclues files for searching that match the given glob
-"            (aka ignore .git files)
-"
-call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
-
-" Use ripgrep in place of "grep"
-call denite#custom#var('grep', 'command', ['rg'])
-
-" Custom options for ripgrep
-"   --vimgrep:  Show results with every match on it's own line
-"   --hidden:   Search hidden directories and files
-"   --heading:  Show the file name above clusters of matches from each file
-"   --S:        Search case insensitively if the pattern is all lowercase
-call denite#custom#var('grep', 'default_opts', ['--hidden', '--vimgrep', '--heading', '-S'])
-
-" Recommended defaults for ripgrep via Denite docs
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
-
-" Remove date from buffer list
-call denite#custom#var('buffer', 'date_format', '')
-
-" Open file commands
-call denite#custom#map('insert,normal', "<C-t>", '<denite:do_action:tabopen>')
-call denite#custom#map('insert,normal', "<C-v>", '<denite:do_action:vsplit>')
-call denite#custom#map('insert,normal', "<C-h>", '<denite:do_action:split>')
-
-" Custom options for Denite
-"   auto_resize             - Auto resize the Denite window height automatically.
-"   prompt                  - Customize denite prompt
-"   direction               - Specify Denite window direction as directly below current pane
-"   winminheight            - Specify min height for Denite window
-"   highlight_mode_insert   - Specify h1-CursorLine in insert mode
-"   prompt_highlight        - Specify color of prompt
-"   highlight_matched_char  - Matched characters highlight
-"   highlight_matched_range - matched range highlight
-let s:denite_options = {'default' : {
-\ 'split': 'floating',
-\ 'start_filter': 1,
-\ 'auto_resize': 1,
-\ 'source_names': 'short',
-\ 'prompt': 'λ:',
-\ 'statusline': 0,
-\ 'highlight_matched_char': 'WildMenu',
-\ 'highlight_matched_range': 'Visual',
-\ 'highlight_window_background': 'Visual',
-\ 'highlight_filter_background': 'StatusLine',
-\ 'highlight_prompt': 'StatusLine',
-\ 'winrow': 1,
-\ 'vertical_preview': 1
-\ }}
-
-" Loop through denite options and enable them
-function! s:profile(opts) abort
-  for l:fname in keys(a:opts)
-    for l:dopt in keys(a:opts[l:fname])
-      call denite#custom#option(l:fname, l:dopt, a:opts[l:fname][l:dopt])
-    endfor
-  endfor
-endfunction
-
-call s:profile(s:denite_options)
-catch
-  echo 'Denite not installed. It should work after running :PlugInstall'
-endtry
+" ============================    vim-markdown    =============================
+" disable spell checking
+let g:markdown_enable_spell_checking = 0
 
 " === Coc.nvim ===
 " use <tab> for trigger completion and navigate to next complete item
@@ -229,14 +162,27 @@ inoremap <silent><expr> <TAB>
 "Close preview window when completion is done.
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" === NERDtree ===
+" ================================ NERDtree ===================================
 " Open NERDtree automatically on startup
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 " Close nvim is NERDtree is the only open buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" === autosave
+let NERDTreeQuitOnOpen=1 	"close nerdtree after file has been opened
+" === git-plugin ===
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+
+" ================================ autosave ===================================
 " activate globally
 let g:auto_save = 1
 " activate for specific filetypes only
@@ -259,6 +205,29 @@ let g:auto_save = 1
 "		CompleteDone	- trigger save after every completion event
 let g:auto_save_events = ["InsertLeave", "TextChanged"]
 
+" ================================== lightline ================================
+let g:lightline = {
+	\ 'colorscheme': 'stylo',
+	\ 'active': {
+	\   'left': [['mode', 'paste'], ['virtualenv', 'relativepath'], ['readonly', 'modified']],
+	\   'right': [['percent'], ['lineinfo'],
+	\             ['filetype', 'fileencoding', 'fileformat', 'indentation']]
+	\ },
+	\ 'inactive': {
+	\   'left': [['readonly', 'relativepath', 'modified']],
+	\   'right': [['percent'], ['lineinfo']]
+	\ },
+	\ 'component_function': {
+	\   'indentation': 'LlIndentation',
+	\   'virtualenv': 'virtualenv#statusline',
+	\ }
+	\}
+
+function! LlIndentation()
+	let text = (&et ? 's' : 't').':'.&tabstop
+	return winwidth('.') > 70 ? text : ''
+endfunction
+
 " ================================================================================
 " ===                                  THEME                                   ===
 " ================================================================================
@@ -272,72 +241,13 @@ colorscheme monokai_pro
 " ================================================================================
 let mapleader=","
 
-" === Denite shorcuts ===
-"   ;         - Browser currently open buffers
-"   <leader>t - Browse list of files in current directory
-"   <leader>g - Search current directory for occurences of given term and close window if no results
-"   <leader>j - Search current directory for occurences of word under cursor
-nmap ; :Denite buffer<CR>
-nmap <leader>t :DeniteProjectDir file/rec<CR>
-nnoremap <leader>g :<C-u>Denite grep:. -no-empty<CR>
-nnoremap <leader>j :<C-u>DeniteCursorWord grep:.<CR>
+"create horizontal/vertical split
+noremap <leader>s :split<cr>
+noremap <leader>v :vsplit<cr>
 
-" Switch modes with C-l (like esc but won't quit)
-call denite#custom#map(
-  \ 'normal',
-  \ '<C-l>',
-  \ '<denite:enter_mode:insert>',
-  \ 'noremap'
-  \)
-call denite#custom#map(
-  \ 'insert',
-  \ '<C-l>',
-  \ '<denite:enter_mode:normal>',
-  \ 'noremap'
-  \)
+" fsf shortcuts
+map ; :Files<CR>
+map <leader>p :Buffers<CR>
 
-" Define mappings while in 'filter' mode
-"   <C-o>         - Switch to normal mode inside of search results
-"   <Esc>         - Exit denite window in any mode
-"   <CR>          - Open currently selected file in any mode
-autocmd FileType denite-filter call s:denite_filter_my_settings()
-function! s:denite_filter_my_settings() abort
-  imap <silent><buffer> <C-o>
-  \ <Plug>(denite_filter_quit)
-  inoremap <silent><buffer><expr> <Esc>
-  \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> <Esc>
-  \ denite#do_map('quit')
-  inoremap <silent><buffer><expr> <CR>
-  \ denite#do_map('do_action')
-endfunction
-
-" Define mappings while in denite window
-"   <CR>        - Opens currently selected file
-"   q or <Esc>  - Quit Denite window
-"   d           - Delete currenly selected file
-"   p           - Preview currently selected file
-"   <C-o> or i  - Switch to insert mode inside of filter prompt
-autocmd FileType denite call s:denite_my_settings()
-function! s:denite_my_settings() abort
-  nnoremap <silent><buffer><expr> <CR>
-  \ denite#do_map('do_action')
-  nnoremap <silent><buffer><expr> q
-  \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> <Esc>
-  \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> d
-  \ denite#do_map('do_action', 'delete')
-  nnoremap <silent><buffer><expr> p
-  \ denite#do_map('do_action', 'preview')
-  nnoremap <silent><buffer><expr> i
-  \ denite#do_map('open_filter_buffer')
-  nnoremap <silent><buffer><expr> <C-o>
-  \ denite#do_map('open_filter_buffer')
-endfunction
-
-" === NERDtree ===
-" Open NERDtree
-Plug 'neoclide/coc-vetur'
-map <C-n> :NERDTreeToggle<CR><Paste>
-
+" nerdtree
+map <leader>n :NERDTreeToggle<CR>
