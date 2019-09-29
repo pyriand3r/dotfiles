@@ -118,6 +118,7 @@ Plug 'tomtom/tcomment_vim'					"toggle comment with g<c line and g<b block
 Plug 'tweekmonster/braceless.vim'		"show indent guides
 Plug 'airblade/vim-gitgutter' 			"show changed lines in column
 Plug 'tpope/vim-surround' 					"change add brakets
+Plug 'Raimondi/delimitMate' 				"auto close brakets
 " === LANGUAGE SUPPORT ===
 " intellisense language server
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -207,7 +208,6 @@ let g:auto_save_events = ["InsertLeave", "TextChanged"]
 
 " ================================== lightline ================================
 let g:lightline = {
-	\ 'colorscheme': 'stylo',
 	\ 'active': {
 	\   'left': [['mode', 'paste'], ['virtualenv', 'relativepath'], ['readonly', 'modified']],
 	\   'right': [['percent'], ['lineinfo'],
