@@ -29,7 +29,7 @@ autocmd BufNewFile,BufRead *.md set filetype=markdown
 filetype plugin indent off
 
 set clipboard=unnamed,unnamedplus
-set listchars=tab:▸\ ,trail:·,nbsp:~,precedes:❮,extends:❯
+set listchars=tab:▸.,trail:·,nbsp:~,precedes:❮,extends:❯
 set list                    " Display listchars
 set nowrap                  " Don’t wrap long lines
 set breakindent             " Indent continued lines after break
@@ -131,8 +131,8 @@ Plug 'fatih/vim-go', {'do': 'GoUpdateBinaries', 'for': 'go'}
 
 " === MARKDOWN ===
 "markdown highlighting
-"Plug 'plasticboy/vim-markdown'
-Plug 'gabrielelana/vim-markdown'
+Plug 'plasticboy/vim-markdown'
+" Plug 'gabrielelana/vim-markdown'
 "markdown preview
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 
@@ -148,7 +148,7 @@ call plug#end()
 
 " ============================    vim-markdown    =============================
 " disable spell checking
-let g:markdown_enable_spell_checking = 0
+" let g:markdown_enable_spell_checking = 0
 
 " ===============================   Coc.nvim  = ===============================
 " use <tab> for trigger completion and navigate to next complete item
