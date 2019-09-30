@@ -9,7 +9,7 @@ set relativenumber					" set relative line number
 set cursorline							" Highlight current line
 set nobackup  							"disable backup files
 set noswapfile							"disable swap files (swp)
-set autochdir 							"always move into directory of opened file
+" set autochdir 							"always move into directory of opened file
 set noexpandtab							"on pressing tab insert tab, no spaces
 set copyindent							"
 set preserveindent					"keep indentation of file (spaces if spaces, tabs if tabs)
@@ -35,8 +35,8 @@ set nowrap                  " Don’t wrap long lines
 set breakindent             " Indent continued lines after break
 set showbreak=↪             " Show symbol for contiuned lines after break
 set linebreak               " Don’t wrap long lines in the middle of a word
-set scrolloff=3             " Display at least 3 lines above/below cursor
-set sidescrolloff=3         " Display at least 3 columns right/left of cursor
+set scrolloff=5             " Display at least 3 lines above/below cursor
+set sidescrolloff=5         " Display at least 3 columns right/left of cursor
 set sidescroll=1            " Don’t put cursor in the mid. of the screen on hor. scroll
 set mouse=a                 " Enable the use of mouse in all modes
 set autoread                " Reload file if changed outside of vim
@@ -119,13 +119,15 @@ Plug 'tweekmonster/braceless.vim'		"show indent guides
 Plug 'airblade/vim-gitgutter' 			"show changed lines in column
 Plug 'tpope/vim-surround' 					"change add brakets
 Plug 'Raimondi/delimitMate' 				"auto close brakets
+
 " === LANGUAGE SUPPORT ===
 " intellisense language server
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " vue highlighting
 Plug 'posva/vim-vue'
 " typescript highlighting
-Plug 'leafgarland/typescript-vim'
+Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
+Plug 'fatih/vim-go', {'do': 'GoUpdateBinaries', 'for': 'go'}
 
 " === MARKDOWN ===
 "markdown highlighting
@@ -148,7 +150,7 @@ call plug#end()
 " disable spell checking
 let g:markdown_enable_spell_checking = 0
 
-" === Coc.nvim ===
+" ===============================   Coc.nvim  = ===============================
 " use <tab> for trigger completion and navigate to next complete item
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -228,6 +230,36 @@ function! LlIndentation()
 	return winwidth('.') > 70 ? text : ''
 endfunction
 
+
+" ================================== VimGo ====================================
+
+" auto import dependencies
+let g:go_fmt_command = "goimports"
+
+" highlight same words
+let g:go_auto_sameids = 1
+
+" syntax default highlighting
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_variable_declaration = 1
+let g:go_highlight_variable_assignments = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+
+"change definition to gopls
+let g:go_def_mode = "gopls"
+
+" disable vim-go :GoDef short cut (gd)
+" this is handled by LanguageClient [LC]
+let g:go_def_mapping_enabled = 0
+
 " ================================================================================
 " ===                                  THEME                                   ===
 " ================================================================================
@@ -251,3 +283,7 @@ map <leader>p :Buffers<CR>
 
 " nerdtree
 map <leader>n :NERDTreeToggle<CR>
+
+" tcomment
+map <leader>c :TComment<CR>
+map <leader>l :TCommentBlock<CR>
