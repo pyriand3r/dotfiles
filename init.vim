@@ -279,7 +279,7 @@ noremap <leader>v :vsplit<cr>
 
 " fsf shortcuts
 map ; :Files<CR>
-map <leader>p :Buffers<CR>
+map <leader>b :Buffers<CR>
 
 " nerdtree
 map <leader>n :NERDTreeToggle<CR>
