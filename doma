@@ -54,21 +54,29 @@ apply_config() {
 	echo "Finished applying the whole config!"
 }
 
-echo "Choose Option:"
-echo "  (s)ave: Will collect all configured dotfiles from filesystem."
-echo "  (a)pply: Will apply all config files in from this collection to the right places."
+if [ $# -eq 1 ]; then
+	option=$1
+else 
 
-read option
-echo ""
+	echo "Choose Option:"
+	echo "  (s)ave: Will collect all configured dotfiles from filesystem."
+	echo "  (u)pload: Will upload the dotfiles to the git server defined in git
+repo settings"
+	echo "  (a)pply: Will apply all config files in from this collection to the right places."
+
+	read option
+	echo ""
+fi
 
 if [ "$option" = "s" ]; then
 	echo "Start collecting configs"
 	collect_config
-	upload_config
 elif [ "$option" = "a" ]; then
 	echo "Start applying configs"
 	apply_config
-else
-	echo "Scheesh try again ;-)"
+elif [ "$option" = "u" ]; then
+	echo "Starting upload"
+	upload_config
+	echo "Not an option"
 fi
 
