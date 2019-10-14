@@ -29,7 +29,7 @@ autocmd BufNewFile,BufRead *.md set filetype=markdown
 filetype plugin indent off
 
 set clipboard=unnamed,unnamedplus
-set listchars=tab:▸.,trail:·,nbsp:~,precedes:❮,extends:❯
+set listchars=tab:▸\ ,trail:·,nbsp:~,precedes:❮,extends:❯
 set list                    " Display listchars
 set nowrap                  " Don’t wrap long lines
 set breakindent             " Indent continued lines after break
@@ -99,26 +99,28 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall
 endif
 
-let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint', 'coc-vetur', 'coc-css', 'coc-json', 'coc-html']
+let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint', 'coc-vetur', 'coc-css', 'coc-json', 'coc-html', 'coc-phpls']
 
 call plug#begin('~/.config/nvim/plugged')
 " === GENERAL ===
-" autosave
-Plug '907th/vim-auto-save'					"autosave
-Plug 'tpope/vim-fugitive'						"git support
-Plug 'junegunn/fzf.vim'							"easy file opening, fuzzy finding
-Plug 'itchyny/lightline.vim'				"status bar
-Plug 'jremmen/vim-ripgrep'					"ripgrep
-Plug 'tpope/vim-eunuch'							"additional userfull commands
-"Plug 'tpope/vim-vinegar'						"simple file browser
-Plug 'scrooloose/nerdtree' 					"sidebar file browser with neat features
-Plug 'Xuyuanp/nerdtree-git-plugin' 	"git icons on nerdtree
-Plug 'terryma/vim-multiple-cursors' "use multiple cursors
-Plug 'tomtom/tcomment_vim'					"toggle comment with g<c line and g<b block
-Plug 'tweekmonster/braceless.vim'		"show indent guides
-Plug 'airblade/vim-gitgutter' 			"show changed lines in column
-Plug 'tpope/vim-surround' 					"change add brakets
-Plug 'Raimondi/delimitMate' 				"auto close brakets
+Plug '907th/vim-auto-save'								"autosave
+Plug 'tpope/vim-fugitive'									"git support
+Plug 'junegunn/fzf.vim'										"easy file opening, fuzzy finding
+Plug 'itchyny/lightline.vim'							"status bar
+Plug 'mengelbrecht/lightline-bufferline'	" Bufferline plugin for lightline
+Plug 'jacoborus/tender.vim' 							" Lightline color theme
+Plug 'jremmen/vim-ripgrep'								"ripgrep
+Plug 'tpope/vim-eunuch'								"additional userfull commands
+Plug 'scrooloose/nerdtree' 						"sidebar file browser with neat features
+Plug 'Xuyuanp/nerdtree-git-plugin' 		"git icons on nerdtree
+Plug 'ryanoasis/vim-devicons' "Icons for filetypes
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight' "Colorize the nerdtree vim devicons
+Plug 'terryma/vim-multiple-cursors' 	"use multiple cursors
+Plug 'tomtom/tcomment_vim'						"toggle comment with g<c line and g<b block
+Plug 'airblade/vim-gitgutter' 				"show changed lines in column
+Plug 'tpope/vim-surround' 						"change add brakets
+Plug 'Raimondi/delimitMate' 					"auto close brakets
+Plug 'semanser/vim-outdated-plugins' 	"checks for outdated plugins 
 
 " === LANGUAGE SUPPORT ===
 " intellisense language server
@@ -128,7 +130,7 @@ Plug 'posva/vim-vue'
 " typescript highlighting
 Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
 Plug 'fatih/vim-go', {'do': 'GoUpdateBinaries', 'for': 'go'}
-
+Plug 'StanAngeloff/php.vim' 				"PHP
 " === MARKDOWN ===
 "markdown highlighting
 Plug 'plasticboy/vim-markdown'
@@ -166,24 +168,25 @@ inoremap <silent><expr> <TAB>
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " ================================ NERDtree ===================================
-" Open NERDtree automatically on startup
-" Close nvim is NERDtree is the only open buffer
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-let NERDTreeQuitOnOpen=1 	"close nerdtree after file has been opened
-" === git-plugin ===
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ 'Ignored'   : '☒',
-    \ "Unknown"   : "?"
-    \ }
+
+" Open NERDTree automatically if vim starts up opening a directory
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'bd' | exe 'NERDTree' argv()[0] |  exe 'cd '.argv()[0] | endif
+
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " Close nerdtree when its the last window open
+
+let g:NERDTreeShowHidden = 1  " Show hidden files/directories
+let g:NERDTreeMinimalUI = 1   " Remove bookmarks and help text from NERDTree
+let g:NERDTreeHijackNetrw = 0 " Use Nerdtree instead of netrw
+let g:loaded_netrw       = 1  " Set the netrw is loaded flag
+let g:loaded_netrwPlugin = 1  " Set the netrw plugin is loaded flag
+let g:NERDTreeDirArrowExpandable = '▸' " Custom icons for expandable directories
+let g:NERDTreeDirArrowCollapsible = '▾' " Custom icons for expanded directories
+let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]','\.idea$[[dir]]', '\.sass-cache$'] " Hide certain files and directories from NERDTree
+let g:NERDTreeQuitOnOpen = 1 " Nerdtree closes after file is opened"
+let g:NERDTreeShowIgnoredStatus = 1 " Highlight .gitignored files
+highlight! link NERDTreeFlags NERDTreeDir " Disable coloring for dirs,flags and links
 
 " ================================ autosave ===================================
 " activate globally
@@ -209,27 +212,31 @@ let g:auto_save = 1
 let g:auto_save_events = ["InsertLeave", "TextChanged"]
 
 " ================================== lightline ================================
-let g:lightline = {
-	\ 'active': {
-	\   'left': [['mode', 'paste'], ['virtualenv', 'relativepath'], ['readonly', 'modified']],
-	\   'right': [['percent'], ['lineinfo'],
-	\             ['filetype', 'fileencoding', 'fileformat', 'indentation']]
-	\ },
-	\ 'inactive': {
-	\   'left': [['readonly', 'relativepath', 'modified']],
-	\   'right': [['percent'], ['lineinfo']]
-	\ },
-	\ 'component_function': {
-	\   'indentation': 'LlIndentation',
-	\   'virtualenv': 'virtualenv#statusline',
-	\ }
-	\}
 
-function! LlIndentation()
-	let text = (&et ? 's' : 't').':'.&tabstop
-	return winwidth('.') > 70 ? text : ''
-endfunction
+let g:lightline = {}
+let g:lightline.colorscheme = 'tender'
+let g:lightline.active = {}
+let g:lightline.active.left = [[ 'mode', 'paste' ],[ 'cocstatus', 'readonly', 'modified' ]] 
+let g:lightline.component_function = {}
+let g:lightline.component_function.gitbranch = 'fugitive#head'
+let g:lightline.tabline = {}
+let g:lightline.tabline.left = [['buffers']]
+let g:lightline.tabline.right = [['gitbranch']]
+let g:lightline.component_expand = {}
+let g:lightline.component_expand.buffers = 'lightline#bufferline#buffers'
+let g:lightline.component_expand.cocstatus = 'cocstatuss'
+let g:lightline.component_type = {}
+let g:lightline.component_type.buffers = 'tabsel'
+let g:lightline.separator = {}
+"let g:lightline.separator.left = ''
+"let g:lightline.separator.right = '' 
+"let g:lightline.subseparator = {}
+"let g:lightline.subseparator.left = ''
+"let g:lightline.subseparator.right = ''
 
+let g:lightline#bufferline#shorten_path     = 1 " Show short path name of buffers
+let g:lightline#bufferline#min_buffer_count = 1 " min value needed to show bufferline
+let g:lightline#bufferline#unnamed          = '[No Name]' " Name from unnamed buffers
 
 " ================================== VimGo ====================================
 
