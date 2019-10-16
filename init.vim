@@ -52,8 +52,8 @@ set showcmd                 " Show command in the bottom right of the screen
 set laststatus=2            " Always show statusbar
 set noshowmode              " Disable mode message, Lightline also has it
 set encoding=utf-8          " Default character encoding
-set textwidth=79            " Maximum width of text that is being inserted
-set colorcolumn=+1,80,101   " Highlight these columns (+1 == textwidth)
+set textwidth=99            " Maximum width of text that is being inserted
+set colorcolumn=+1,100,120   " Highlight these columns (+1 == textwidth)
 set autoindent              " Automatically indent new lines
 set incsearch               " Show matches while entering the search pattern
 set ignorecase              " Ignore case while searching …
@@ -120,7 +120,7 @@ Plug 'tomtom/tcomment_vim'						"toggle comment with g<c line and g<b block
 Plug 'airblade/vim-gitgutter' 				"show changed lines in column
 Plug 'tpope/vim-surround' 						"change add brakets
 Plug 'Raimondi/delimitMate' 					"auto close brakets
-Plug 'semanser/vim-outdated-plugins' 	"checks for outdated plugins 
+Plug 'thisisrandy/vim-outdated-plugins' 	"checks for outdated plugins 
 
 " === LANGUAGE SUPPORT ===
 " intellisense language server
@@ -294,3 +294,11 @@ map <leader>n :NERDTreeToggle<CR>
 " tcomment
 map <leader>c :TComment<CR>
 map <leader>l :TCommentBlock<CR>
+
+let g:rg_command = '
+  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
+  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
+  \ -g "!{.git,node_modules,vendor}/*" '
+
+command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
+
