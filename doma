@@ -31,7 +31,9 @@ collect_config() {
 
 upload_config() {
 	git add .
-	git commit -m "dotfiles updated"
+	echo "Commit message:"
+	read msg
+	git commit -m "${msg}"
 	git push
 }
 

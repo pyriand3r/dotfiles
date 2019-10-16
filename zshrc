@@ -99,3 +99,5 @@ source ~/.work_alias
 
 export GOPATH=$HOME/go/bin
 PATH=$PATH:$GOPATH
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
