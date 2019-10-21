@@ -236,9 +236,6 @@ let g:lightline#bufferline#unnamed          = '[No Name]' " Name from unnamed bu
 " auto import dependencies
 let g:go_fmt_command = "goimports"
 
-" highlight same words
-let g:go_auto_sameids = 1
-
 " syntax default highlighting
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_extra_types = 1
@@ -273,6 +270,10 @@ let g:prettier#config#tab_width = 2 "tab with in spaces
 let g:prettier#config#use_tabs = 'true' "use tabs for intendation
 let g:prettier#config#semi = 'false' "Don't write semicolons
 let g:prettier#config#single_quote = 'false' "Single qoutes over double quotes
+
+" ============================== vim-outdated ================================== "
+" Trigger :PlugUpdate as needed
+let g:outdated_plugins_trigger_mode = 1
 
 " ================================================================================
 " ===                                  THEME                                   ===
