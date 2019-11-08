@@ -19,7 +19,9 @@ collect_config() {
 	echo "collect termite conf"
 	cp -r ~/.config/termite/config $SCRIPTPATH/termite.conf  
 	echo "collect nvim conf"
-	cp -r ~/.config/nvim/init.vim $SCRIPTPATH/init.vim  
+	cp -r ~/.config/nvim/init.vim $SCRIPTPATH/init.vim
+	echo "collecting vim snippets"
+	cp -r ~/.config/coc/ultisnips $SCRIPTPATH/ultisnips
 	echo "collect comption conf"
 	cp -r ~/.config/compton.conf $SCRIPTPATH/compton.conf
 	echo "collect alias file"
@@ -47,6 +49,8 @@ apply_config() {
 	cp -r $SCRIPTPATH/termite.conf ~/.config/termite/config
 	echo "apply nvim conf"
 	cp -r $SCRIPTPATH/init.vim ~/.config/nvim/init.vim
+	echo "deploying vim snippets"
+	cp -r $SCRIPTPATH/ultisnips ~/.config/coc/ultisnips
 	echo "apply comption conf"
 	cp -r $SCRIPTPATH/compton.conf ~/.config/compton.conf
 	echo "applying alias file"

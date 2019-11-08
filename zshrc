@@ -97,7 +97,7 @@ source $ZSH/oh-my-zsh.sh
 source ~/.aliases
 source ~/.work_alias
 
-export GOPATH=$HOME/go/bin
-PATH=$PATH:$GOPATH
+export GOPATH=$HOME/go
+PATH=$PATH:$GOPATH/bin
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

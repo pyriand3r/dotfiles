@@ -18,7 +18,7 @@ set shiftwidth=2                                             " when indenting wi
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags " activate autocompletion for tags in html files
 autocmd BufNewFile,BufRead *.md set filetype=markdown        " Recognize .md files as markdown
 filetype plugin indent off                                   " set indentation to 2 spaces
-set clipboard=unnamed,unnamedplus                            " always use system clipboard on yanking
+"set clipboard=unnamed,unnamedplus                            " always use system clipboard on yanking
 set listchars=tab:▸\ ,trail:·,nbsp:~,precedes:❮,extends:❯    " icons for tabs, spaces and horizontal scrolling
 set list                                                     " Display listchars
 set nowrap                                                   " Don’t wrap long lines
@@ -32,8 +32,6 @@ set mouse=a                                                  " Enable the use of
 set autoread                                                 " Reload file if changed outside of vim
 set hidden                                                   " Don’t unload abandoned buffers
 set nostartofline                                            " Keep the cursor in the same column when moving
-set nobackup                                                 " Don’t create backups on save
-set noswapfile                                               " Don’t create swap files
 set nomodeline                                               " Don’t read modelines from files
 set splitbelow                                               " Open hsplit below current window
 set splitright                                               " Open vsplit right of current window
@@ -89,13 +87,13 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall
 endif
 
-let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint', 'coc-vetur', 'coc-css', 'coc-json', 'coc-html', 'coc-phpls']
+let g:coc_global_extensions = ['coc-snippets', 'coc-tsserver', 'coc-tslint-plugin', 'coc-vetur', 'coc-css', 'coc-json', 'coc-html', 'coc-phpls']
 
 call plug#begin('~/.config/nvim/plugged')
 Plug '907th/vim-auto-save'                                             " autosave
 Plug 'tpope/vim-fugitive'                                              " git support
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }      " easy file finding, fuzzy, global install
-Plug 'junegunn/fzf.vim' 																							 " fzf vim plugin
+Plug 'junegunn/fzf.vim'                                                " fzf vim plugin
 Plug 'itchyny/lightline.vim'                                           " status bar
 Plug 'mengelbrecht/lightline-bufferline'                               " Bufferline plugin for lightline
 Plug 'jacoborus/tender.vim'                                            " Lightline color theme
@@ -121,7 +119,8 @@ Plug 'StanAngeloff/php.vim'                                            " PHP
 Plug 'plasticboy/vim-markdown'                                         " markdown highlighting
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' } " markdown preview
 Plug 'phanviet/vim-monokai-pro'                                        " Syntax highlight theme
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' } 									" prettify files
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }                 " prettify files
+Plug 'xavierchow/vim-swagger-preview'                                  " openapi preview rendering
 
 call plug#end()
 
@@ -129,28 +128,23 @@ call plug#end()
 " ===                             PLUGINS_CONFIG                            ===
 " =============================================================================
 
+" ===============================   markdown  =================================
+let g:vim_markdown_folding_disabled = 1		"Disable folding
+
 " ===============================   Coc.nvim  = ===============================
 " use <tab> for trigger completion and navigate to next complete item
-function! s:check_back_space() abort
-	let col = col('.') - 1
-	return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
 inoremap <silent><expr> <TAB>
-			\ pumvisible() ? "\<C-n>" :
-			\ <SID>check_back_space() ? "\<TAB>" :
-			\ coc#refresh()
-
-inoremap <silent><expr> <TAB>
-			\ pumvisible() ? "\<C-n>" :
-			\ <SID>check_back_space() ? "\<TAB>" :
-			\ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 
 function! s:check_back_space() abort
-	let col = col('.') - 1
-	return !col || getline('.')[col - 1]  =~# '\s'
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+let g:coc_snippet_next = '<tab>'
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
@@ -166,10 +160,10 @@ nmap <leader>rn <Plug>(coc-rename)
 
 " ================================ NERDtree ===================================
 " Open NERDTree automatically if vim starts up opening a directory
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'bd' | exe 'NERDTree' argv()[0] |  exe 'cd '.argv()[0] | endif
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'bd' | exe 'NERDTree' argv()[0] |  exe 'cd '.argv()[0] | endif
 
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " Close nerdtree when its the last window open
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " Close nerdtree when its the last window open
 
 let g:NERDTreeShowHidden = 1  " Show hidden files/directories
 let g:NERDTreeMinimalUI = 1   " Remove bookmarks and help text from NERDTree
@@ -326,3 +320,62 @@ map <F7> gg=G<C-o><C-o>
 
 " prettify file with prettify
 nmap <C-M-l> :Prettier<CR>
+
+" convenient save command
+nnoremap <C-s> :w<CR>
+
+nnoremap <F2> gg=G <CR>
+
+function! s:init_search_buffer() abort
+	execute 'resize' float2nr(0.4 * &lines)
+	execute 'tnoremap <silent> <buffer> <C-s> <C-\><C-n>:<C-u>call <SID>toggle_fullscreen_search()<CR>'
+	execute 'tnoremap <silent> <buffer> <C-a> <Esc><C-\><C-n>:<C-u>call <SID>set_filter_search()<CR>'
+endfunction
+
+function! s:toggle_fullscreen_search() abort
+	let l:defaultsize = float2nr(0.4 * &lines)
+	if l:defaultsize == winheight('%')
+		tab split
+	else
+		tabclose
+		resize 1
+		execute 'resize' float2nr(0.4 * &lines)
+	endif
+	normal! i
+endfunction
+
+function! s:set_filter_search() abort
+	call inputsave()
+	let name = input('Enter pattern: ')
+	call inputrestore()
+	call OpenPatternSearch(name)
+endfunction
+
+function! OpenSearch() abort
+	call fzf#run(fzf#wrap('File-Search',{
+				\ 'source':  "find -path '*/\.*' -prune -o -type f -print 2> /dev/null",
+				\ 'options':  '--reverse --preview "highlight -O ansi -l {} 2> /dev/null "',
+				\ "window":  "bot split new",
+				\ }))
+	call s:init_search_buffer()
+endfunction
+
+
+function! OpenPatternSearch(pattern) abort
+	call fzf#run(fzf#wrap('File-Pattern-Search',{
+				\ 'source':  'rg --files-with-matches --no-messages "'.a:pattern.'"',
+				\ 'options':  '--reverse --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors ''match:bg:yellow'' --ignore-case --pretty --context 10 '''.a:pattern.''' | rg --ignore-case --pretty --context 10 '''.a:pattern.''' {}"',
+				\ "window":  "bot split new",
+				\ }))
+	call s:init_search_buffer()
+endfunction
+
+nnoremap <silent> <leader>s :call OpenSearch()<CR>
+
+imap <C-h> <ESC>ysiw"A
+
+nnoremap <leader><F4> :bd<CR>
+
+imap <C-e> <Enter><Esc>O
+
+map <F2> :NERDTreeFind<CR>
