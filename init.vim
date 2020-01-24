@@ -118,9 +118,11 @@ Plug 'fatih/vim-go', {'do': 'GoUpdateBinaries', 'for': 'go'}           " golang 
 Plug 'StanAngeloff/php.vim'                                            " PHP
 Plug 'plasticboy/vim-markdown'                                         " markdown highlighting
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' } " markdown preview
-Plug 'phanviet/vim-monokai-pro'                                        " Syntax highlight theme
+"Plug 'phanviet/vim-monokai-pro'                                        " Syntax highlight theme
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }                 " prettify files
 Plug 'xavierchow/vim-swagger-preview'                                  " openapi preview rendering
+Plug 'morhetz/gruvbox'                                                 " theme
+Plug 'mustache/vim-mustache-handlebars'                                " syntax highlighting for handlebars
 
 call plug#end()
 
@@ -267,7 +269,7 @@ let g:prettier#config#single_quote = 'false' "Single qoutes over double quotes
 
 " ============================== vim-outdated ================================== "
 " Trigger :PlugUpdate as needed
-let g:outdated_plugins_trigger_mode = 1
+"let g:outdated_plugins_trigger_mode = 1
 
 " ================================================================================
 " ===                                  THEME                                   ===
@@ -275,7 +277,12 @@ let g:outdated_plugins_trigger_mode = 1
 " activate support for 24-bit colors
 set termguicolors
 " set theme
-colorscheme monokai_pro
+"colorscheme monokai_pro
+let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_contrast_light = 'hard'
+let g:gruvbox_invert_signs = 1
+colorscheme gruvbox
+set background=dark
 
 " ================================================================================
 " ===                                KEYBINDINGS                               ===
@@ -324,7 +331,7 @@ nmap <C-M-l> :Prettier<CR>
 " convenient save command
 nnoremap <C-s> :w<CR>
 
-nnoremap <F2> gg=G <CR>
+"------------------search shortcuts
 
 function! s:init_search_buffer() abort
 	execute 'resize' float2nr(0.4 * &lines)
@@ -372,10 +379,16 @@ endfunction
 
 nnoremap <silent> <leader>s :call OpenSearch()<CR>
 
+"--------------search shortcuts end
+
+"convenient shortcut for writing json. surrounds current word with double quotes
 imap <C-h> <ESC>ysiw"A
 
+"convient shortcut to close a buffer
 nnoremap <leader><F4> :bd<CR>
 
-imap <C-e> <Enter><Esc>O
-
+"move nerd tree to currently opened file folder
 map <F2> :NERDTreeFind<CR>
+
+"toggle background to toggle dark and light theme
+map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>

@@ -24,10 +24,12 @@ collect_config() {
 	cp -r ~/.config/coc/ultisnips $SCRIPTPATH/ultisnips
 	echo "collect comption conf"
 	cp -r ~/.config/compton.conf $SCRIPTPATH/compton.conf
-	echo "collect alias file"
+	echo "collecting alias file"
 	cp -r ~/.aliases $SCRIPTPATH/aliases
-	echo "collect i3status conf"
+	echo "collecting i3status conf"
 	cp -r ~/.config/i3status/config $SCRIPTPATH/i3status.conf
+	echo "collecting xmouseless config"
+	cp ~/.config/xmouseless/config.h $SCRIPTPATH/xmouseless.h
 	echo "Finished collecting the whole config!"
 }
 
@@ -57,6 +59,14 @@ apply_config() {
 	cp -r $SCRIPTPATH/aliases ~/.aliases
 	echo "applying i3status conf"
 	cp -r $SCRIPTPATH/i3status.conf ~/.config/i3status/config
+	echo "setting up xmouseless"
+	sudo rm -r ~/.config/xmouseless
+	git clone git@github.com:jbensmann/xmouseless.git ~/.config/xmouseless
+	cp -r $SCRIPTPATH/xmouseless.h ~/.config/xmouseless/config.h
+	cd ~/.config/xmouseless/
+	make
+	sudo make install
+	cd $SCRIPTPATH
 	echo "Finished applying the whole config!"
 }
 

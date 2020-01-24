@@ -9,6 +9,9 @@ set $restartConkyCmd killall conky; start_conky_maia
 # Set mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
 
+#disable caps_lock
+exec "setxkbmap -option caps:none"
+
 # set default desktop layout (default is tiling)
 # workspace_layout tabbed <stacking|tabbed>
 
@@ -32,7 +35,7 @@ font xft:mononoki 11
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec termite
+bindsym $mod+Return exec terminator
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -142,8 +145,8 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
 #navigate workspaces next / previous
-bindsym $mod+Ctrl+Right workspace next
-bindsym $mod+Ctrl+Left workspace prev
+bindsym $mod+Ctrl+Right workspace next_on_output
+bindsym $mod+Ctrl+Left workspace prev_on_output
 
 # Workspace names
 # to display names or symbols instead of plain workspace numbers you can use
@@ -314,8 +317,9 @@ set_from_resource $term_color15    color15
 # Start i3bar to display a workspace bar (plus the system information i3status if available)
 bar {
 	i3bar_command i3bar
-	status_command i3status
+	status_command i3status-rs ~/.i3/status.toml
 	position top
+	font pango:JetBrains Mono, FontAwesome5Free, FontAwesome5Brands 10
 
 ## please set your primary output first. Example: 'xrandr --output eDP1 --primary'
 	tray_output primary
@@ -323,11 +327,12 @@ bar {
 
 	bindsym button4 nop
 	bindsym button5 nop
-#   font xft:URWGothic-Book 11
+        font pango:JetBrains Mono 10
 	strip_workspace_numbers yes
 
     colors {
         background #222D31
+        #background #E5201D
         statusline #F9FAF9
         separator  #454947
 
@@ -465,10 +470,10 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute s
 bindsym $mod+Shift+End exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
 bindsym $mod+Shift+Insert exec xbacklight -inc 20 # increase screen brightness
 
-bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
 bindsym $mod+Shift+Delete exec xbacklight -dec 20 # decrease screen brightness
 
 # Touchpad controls
@@ -490,3 +495,7 @@ bindsym $mod+Shift+a exec playerctl previous
 bindsym $mod+o open
 
 bindsym $mod+Control+l exec --no-startup-id xidlehook-client --trigger --socket ~/.config/xidlehook.sock; exec notify-send 'going to sleep'
+
+
+bindcode 66 exec "xmouseless"
+#bindcode --release 66 exec "pkill xmouseless; exec notify-send 'mousemode off'"
