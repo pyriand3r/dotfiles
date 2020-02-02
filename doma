@@ -61,7 +61,7 @@ apply_config() {
 	cp -r $SCRIPTPATH/i3status.conf ~/.config/i3status/config
 	echo "setting up xmouseless"
 	sudo rm -r ~/.config/xmouseless
-	git clone git@github.com:jbensmann/xmouseless.git ~/.config/xmouseless
+	git clone https://github.com/jbensmann/xmouseless.git ~/.config/xmouseless
 	cp -r $SCRIPTPATH/xmouseless.h ~/.config/xmouseless/config.h
 	cd ~/.config/xmouseless/
 	make

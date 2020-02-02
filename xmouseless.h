@@ -12,8 +12,8 @@ static SpeedBinding speed_bindings[] = {
     /* key             speed */  
     { XK_Super_L,      3000 },
     { XK_r,            1500 },
-    { XK_e,              10 },
-    { XK_w,             100 },
+    { XK_w,              10 },
+    { XK_e,             100 },
 };
 
 /* moves the mouse pointer
@@ -43,7 +43,7 @@ static ClickBinding click_bindings[] = {
 static ScrollBinding scroll_bindings[] = {
     /* key        x      y */
     { XK_n,        0 ,    25 },
-    { XK_o,        0 ,   -25 },
+    { XK_p,        0 ,   -25 },
     { XK_plus,     0 ,    80 },
     { XK_minus,    0 ,   -80 },
     { XK_h,        25,    0  },
