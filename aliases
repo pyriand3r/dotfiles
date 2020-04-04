@@ -32,6 +32,8 @@ cpr () {
     rsync --info=progress2 $1 $2
 }
 
+alias t="todo.sh"
+
 ##############
 #### TMSU ####
 ##############
