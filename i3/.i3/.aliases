@@ -23,38 +23,10 @@ alias shutdown='sudo /sbin/shutdown'
 # check battery stats
 alias batcheck="upower -i $(upower -e | grep 'BAT') | grep -E 'state|to\ full|percentage|capacity'"
 
-# neovim
-alias vim="nvim"
-alias vi="nvim"
-
-# calculator
-alias c="calc"
-
 # use rsync to copy files for progress output
 cpr () {
     rsync --info=progress2 $1 $2
 }
-
-# todo.sh
-#
-alias t="clear; echo "TODOS:"; echo ""; todo.sh"
-
-ta() {
-	todo.sh add $1
-	clear
-	echo "TODOS:"
-	echo ""
-	todo.sh
-}
-
-td() { 
-	todo.sh do $1
-	clear
-	echo "TODOS:"
-	echo ""
-	todo.sh
-}
-
 
 ##############
 #### TMSU ####
@@ -159,60 +131,3 @@ alias drm="docker rm"
 
 # Remove image
 alias drmi="docker rmi"
-
-
-#############
-#### FZF ####
-#############
-
-
-# Open selected file with vim | path can be set as argument
-ff() {
-  local files
-  IFS=$'\n' files=($(find ${1:-.} -path '*/\.*' -prune -o -type f -print 2> /dev/null | fzf --preview "highlight -O ansi -l {} 2> /dev/null"))
-  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
-}
-
-# ff including hidden files | path can be set as argument
-ffa() {
-  local files
-  IFS=$'\n' files=($(find ${1:-.} 2> /dev/null | fzf --preview "highlight -O ansi -l {} 2> /dev/null"))
-  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
-}
-
-# Change to selected directory | path can be set as argument
-fd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
-}
-
-# fd including hidden directories | path can be set as argument
-fda() {
-  local dir
-  dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
-}
-
-# using ripgrep combined with preview
-# find-in-file - usage: fif <searchTerm>
-fif() {
-  if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
-  rg --files-with-matches --no-messages "$1" | fzf --reverse --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' | rg --ignore-case --pretty --context 10 '$1' {}"
-}
-
-# Search history with fzf
-fh() {
-  print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -r 's/ *[0-9]*\*? *//' | sed -r 's/\\/\\\\/g')
-}
-
-# find process
-fpid() {
-  local pid
-  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
-
-  if [ "x$pid" != "x" ]
-  then
-    echo $pid
-  fi
-}
-

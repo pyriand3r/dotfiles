@@ -1,0 +1,10 @@
+#!/bin/sh
+
+running=`pgrep xmouseless`
+
+if [ "$running" = "" ]
+then
+	xmouseless
+else
+	pkill xmouseless
+fi
